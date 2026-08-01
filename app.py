@@ -32,6 +32,9 @@ app.secret_key = "change_this_to_a_long_random_secret_key"
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
+os.makedirs("database", exist_ok=True)
+
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database/finance.db"
 app.config["SQLALCHEMY_DATABASE_URI"] = (
     "sqlite:///" + os.path.join(BASE_DIR, "database", "finance.db")
 )
