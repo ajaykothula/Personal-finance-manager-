@@ -18,40 +18,26 @@
 
     <h1>Create Account</h1>
 
-    <p>Start managing your money smarter.</p>
+<p>Enter your details to continue.</p>
+<form action="/register" method="POST">
 
-    <form action="/register" method="POST">
+    <input
+        type="text"
+        name="fullname"
+        placeholder="Full Name"
+        required>
 
-        <input
-            type="text"
-            name="fullname"
-            placeholder="Full Name"
-            required>
+    <input
+        type="email"
+        name="email"
+        placeholder="Email Address"
+        required>
 
-        <input
-            type="email"
-            name="email"
-            placeholder="Email Address"
-            required>
+    <button type="submit">
+        Continue
+    </button>
 
-        <input
-            type="password"
-            name="password"
-            placeholder="Password"
-            required>
-
-        <input
-            type="password"
-            name="confirm_password"
-            placeholder="Confirm Password"
-            required>
-
-        <button type="submit">
-            Create Account
-        </button>
-
-    </form>
-
+</form>
     <p class="signup">
         Already have an account?
         <a href="/login">Login</a>

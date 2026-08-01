@@ -190,3 +190,16 @@ form button{
     background:#1D4ED8;
     transform:translateY(-2px);
 }
+.flash {
+    margin-bottom: 15px;
+    padding: 12px;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: 600;
+}
+
+.flash.error {
+    background: #ffe5e5;
+    color: #c62828;
+    border: 1px solid #ef9a9a;
+}

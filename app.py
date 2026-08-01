@@ -41,9 +41,33 @@ app.config["MAIL_SERVER"] = "smtp.gmail.com"
 app.config["MAIL_PORT"] = 587
 app.config["MAIL_USE_TLS"] = True
 app.config["MAIL_USERNAME"] = "ajaykothula@gmail.com"
-app.config["MAIL_PASSWORD"] = "sfua zwja tdcq udty"
+app.config["MAIL_PASSWORD"] = "jwru fhpe vkwt fiax"
 
 mail = Mail(app)
+def send_otp(email, otp):
+    try:
+        msg = Message(
+            subject="Personal Finance Manager - Email Verification",
+            sender=app.config["MAIL_USERNAME"],
+            recipients=[email]
+        )
+
+        msg.body = f"""
+Hello,
+
+Your verification code is:
+
+{otp}
+
+This OTP is valid for 10 minutes.
+"""
+
+        mail.send(msg)
+        print("✅ Email sent successfully")
+
+    except Exception as e:
+        print("❌ Email Error:", e)
+
 db.init_app(app)
 
 with app.app_context():
@@ -57,67 +81,126 @@ def register():
 
     if request.method == "POST":
 
-        fullname = request.form["fullname"]
-        email = request.form["email"]
-        password = request.form["password"]
+        fullname = request.form["fullname"].strip()
+        email = request.form["email"].strip().lower()
 
-        # Check if email already exists
         existing_user = User.query.filter_by(email=email).first()
 
         if existing_user:
-            return "Email already exists!"
+            flash("Email already exists!")
+            return redirect(url_for("register"))
 
-        # Hash password
+        otp = str(random.randint(100000, 999999))
+
+        session["register_name"] = fullname
+        session["register_email"] = email
+        session["register_otp"] = otp
+
+        print("OTP:", otp)
+
+        send_otp(email, otp)
+
+        return redirect(url_for("verify_register_otp"))
+
+    return render_template("register.html")
+@app.route("/verify-register-otp", methods=["GET", "POST"])
+def verify_register_otp():
+
+    if "register_email" not in session:
+        return redirect(url_for("register"))
+
+    if request.method == "POST":
+
+        entered_otp = request.form["otp"].strip()
+
+        if entered_otp == session.get("register_otp"):
+
+            session["register_verified"] = True
+
+            return redirect(url_for("create_password"))
+
+        flash("Invalid OTP.")
+
+    return render_template("verify_register_otp.html")
+@app.route("/create-password", methods=["GET", "POST"])
+def create_password():
+
+    if not session.get("register_verified"):
+        return redirect(url_for("register"))
+
+    if request.method == "POST":
+
+        password = request.form["password"]
+        confirm = request.form["confirm_password"]
+
+        if password != confirm:
+            flash("Passwords do not match.")
+            return redirect(url_for("create_password"))
+
         hashed_password = generate_password_hash(password)
 
-        # Create user
         new_user = User(
-            full_name=fullname,
-            email=email,
+            full_name=session["register_name"],
+            email=session["register_email"],
             password=hashed_password
         )
 
         db.session.add(new_user)
         db.session.commit()
+
         wallets = [
             Wallet(user_id=new_user.id, name="Cash"),
             Wallet(user_id=new_user.id, name="SBI"),
             Wallet(user_id=new_user.id, name="HDFC"),
             Wallet(user_id=new_user.id, name="PhonePe"),
             Wallet(user_id=new_user.id, name="Google Pay")
-            ]
+        ]
 
         db.session.add_all(wallets)
         db.session.commit()
-        return redirect(url_for("login"))
 
-    return render_template("register.html")
+        session["user_id"] = new_user.id
+
+        session.pop("register_name", None)
+        session.pop("register_email", None)
+        session.pop("register_otp", None)
+        session.pop("register_verified", None)
+
+        flash("Account created successfully!")
+
+        return redirect(url_for("dashboard"))
+
+    return render_template("create_password.html")
 @app.route("/login", methods=["GET", "POST"])
 def login():
 
     if request.method == "POST":
 
-        email = request.form["email"]
+        email = request.form["email"].strip().lower()
         password = request.form["password"]
 
         user = User.query.filter_by(email=email).first()
 
-        print("User:", user)
-        if user:
-           print("Stored hash:", user.password)
-           print("Password check:", check_password_hash(user.password, password))
-        if user and check_password_hash(user.password, password):
+        # Account does not exist
+        if not user:
+            flash("Account not found. Please create an account first.")
+            return redirect(url_for("register"))
 
-            if user.is_blocked:
-                flash("Your account has been blocked by the administrator.")
-                return redirect(url_for("login"))
+        # Wrong password
+        if not check_password_hash(user.password, password):
+            flash("Incorrect password.")
+            return redirect(url_for("login"))
 
-            session["user_id"] = user.id
-            session["is_admin"] = user.is_admin
+        # Blocked account
+        if user.is_blocked:
+            flash("Your account has been blocked by the administrator.")
+            return redirect(url_for("login"))
 
-            return redirect(url_for("dashboard"))
+        # Login success
+        session["user_id"] = user.id
+        session["is_admin"] = user.is_admin
 
-        flash("Invalid email or password")
+        return redirect(url_for("dashboard"))
 
     return render_template("login.html")
 @app.route("/admin")
@@ -856,32 +939,36 @@ def dashboard():
             "💡 Try reducing unnecessary expenses to improve your savings."
           )
     # Financial Health Score
-    health_score = 100
-
-# Savings Rate
-    if income > 0:
-       savings_percent = ((income - expense) / income) * 100
+# Financial Health Score
+    # Financial Health Score
+    if income == 0 and expense == 0:
+        health_score = 0
     else:
-       savings_percent = 0
+        health_score = 100
 
-    if savings_percent < 10:
-       health_score -= 20
-    elif savings_percent < 20:
-       health_score -= 10
+        if income > 0:
+            savings_percent = ((income - expense) / income) * 100
+        else:
+            savings_percent = 0
 
-# Budget Penalty
-    health_score -= len(budget_warnings) * 5
+        if savings_percent < 10:
+            health_score -= 20
+        elif savings_percent < 20:
+            health_score -= 10
 
-# Loan Penalty
-    pending_loans = Loan.query.filter_by(
-        user_id=user.id,
-        status="Pending"
-    ).count()
+        # Budget Penalty
+        health_score -= len(budget_warnings) * 5
 
-    health_score -= pending_loans * 5
+        # Loan Penalty
+        pending_loans = Loan.query.filter_by(
+            user_id=user.id,
+            status="Pending"
+        ).count()
 
-# Prevent negative score
+        health_score -= pending_loans * 5
+
     health_score = max(0, min(100, health_score))
+
     return render_template(
         "dashboard.html",
         greeting=greeting,
@@ -903,6 +990,7 @@ def dashboard():
         wallets=wallets,
         notifications=notifications
     )
+
 @app.route("/add-transaction", methods=["GET", "POST"])
 def add_transaction():
 

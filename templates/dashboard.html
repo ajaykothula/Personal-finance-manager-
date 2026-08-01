@@ -84,14 +84,18 @@ No insights available yet.
         {{ health_score }}/100
     </div>
 
-    {% if health_score >= 80 %}
-        <p class="excellent">🟢 Excellent Financial Health</p>
-    {% elif health_score >= 50 %}
-        <p class="good">🟡 Good, but can improve</p>
-    {% else %}
-        <p class="poor">🔴 Needs Attention</p>
-    {% endif %}
+{% if health_score == 0 %}
+<p class="average">⚪ No Financial Data Yet</p>
 
+{% elif health_score >= 80 %}
+<p class="excellent">🟢 Excellent Financial Health</p>
+
+{% elif health_score >= 60 %}
+<p class="good">🟡 Good Financial Health</p>
+
+{% else %}
+<p class="poor">🔴 Needs Improvement</p>
+{% endif %}
     <div class="progress-bar">
         <div class="progress-fill"
              style="width: {{ health_score }}%;">
