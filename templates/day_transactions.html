@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Transactions</title>
+
+<link rel="preconnect"
+href="https://fonts.googleapis.com">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Poppins,sans-serif;
+}
+
+body{
+background:#F4F7FB;
+padding:30px;
+}
+
+.container{
+max-width:1000px;
+margin:auto;
+}
+
+.header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:25px;
+flex-wrap:wrap;
+gap:15px;
+}
+
+.header h1{
+color:#1F2937;
+}
+
+.back-btn{
+text-decoration:none;
+background:#2563EB;
+color:white;
+padding:12px 22px;
+border-radius:10px;
+font-weight:600;
+}
+
+.card{
+background:white;
+padding:18px;
+border-radius:15px;
+box-shadow:0 5px 15px rgba(0,0,0,.08);
+margin-bottom:15px;
+}
+
+.top{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:12px;
+}
+
+.income{
+color:#16A34A;
+font-weight:bold;
+font-size:18px;
+}
+
+.expense{
+color:#DC2626;
+font-weight:bold;
+font-size:18px;
+}
+
+.details p{
+margin:6px 0;
+color:#374151;
+}
+
+.actions{
+margin-top:15px;
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+}
+
+.edit-btn,
+.delete-btn{
+
+padding:10px 18px;
+
+text-decoration:none;
+
+border-radius:8px;
+
+font-weight:600;
+
+color:white;
+
+}
+
+.edit-btn{
+background:#2563EB;
+}
+
+.delete-btn{
+background:#DC2626;
+}
+
+.empty{
+
+background:white;
+
+padding:50px;
+
+text-align:center;
+
+border-radius:15px;
+
+box-shadow:0 5px 15px rgba(0,0,0,.08);
+
+font-size:18px;
+
+color:#6B7280;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="header">
+
+<h1>
+📅 {{ selected_date.strftime("%d %B %Y") }}
+</h1>
+
+<a
+href="{{ url_for('calendar_view') }}"
+class="back-btn">
+
+⬅ Back to Calendar
+
+</a>
+
+</div>
+
+{% if transactions %}
+
+{% for t in transactions %}
+
+<div class="card">
+
+<div class="top">
+
+<h2>{{ t.category }}</h2>
+
+{% if t.type=="Income" %}
+
+<span class="income">
+
++ ₹{{ t.amount }}
+
+</span>
+
+{% else %}
+
+<span class="expense">
+
+- ₹{{ t.amount }}
+
+</span>
+
+{% endif %}
+
+</div>
+
+<div class="details">
+
+<p>
+<b>Type:</b>
+{{ t.type }}
+</p>
+
+<p>
+<b>Wallet:</b>
+
+{% if t.wallet %}
+{{ t.wallet.name }}
+{% else %}
+Not Selected
+{% endif %}
+
+</p>
+
+<p>
+<b>Note:</b>
+
+{{ t.note or "No note" }}
+
+</p>
+
+{% if t.receipt %}
+
+<p>
+
+<b>Receipt:</b>
+
+<a href="/uploads/{{ t.receipt }}"
+target="_blank">
+
+View Receipt
+
+</a>
+
+</p>
+
+{% endif %}
+
+</div>
+
+<div class="actions">
+
+<a
+href="{{ url_for('edit_transaction', id=t.id) }}"
+class="edit-btn">
+
+✏ Edit
+
+</a>
+
+<a
+href="{{ url_for('delete_transaction', id=t.id) }}"
+class="delete-btn"
+
+onclick="return confirm('Delete this transaction?')">
+
+🗑 Delete
+
+</a>
+
+</div>
+
+</div>
+
+{% endfor %}
+
+{% else %}
+
+<div class="empty">
+
+No transactions found for this date.
+
+</div>
+
+{% endif %}
+
+</div>
+
+</body>
+
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Budget Manager</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/add_transaction.css') }}">
+</head>
+
+<body>
+
+<div class="container">
+    <div class="card">
+
+        <h1>💰 Monthly Budget</h1>
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert-success">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+        <p>Set your spending limits</p>
+
+        <form method="POST">
+
+            <label>Category</label>
+            <select name="category" required>
+                <option>Food</option>
+                <option>Fuel</option>
+                <option>Shopping</option>
+                <option>Travel</option>
+                <option>Bills</option>
+                <option>Medical</option>
+                <option>Entertainment</option>
+                <option>Education</option>
+                <option>Other</option>
+            </select>
+
+            <label>Budget Amount (₹)</label>
+
+            <input
+                type="number"
+                name="amount"
+                placeholder="Enter budget"
+                required>
+
+            <button type="submit">
+                💾 Save Budget
+            </button>
+<a href="/reset-budget"
+   class="reset-btn"
+   onclick="return confirm('Reset all budgets?')">
+   🔄 Reset Budgets
+</a>
+<div class="budget-actions">
+
+    <a href="{{ url_for('dashboard') }}" class="back-btn">
+        ⬅ Back to Dashboard
+    </a>
+
+</div>
+
+        </form>
+{% for b in budget_data %}
+
+<div class="budget-card">
+
+    <h2>{{ b.category }}</h2>
+
+    <div class="progress">
+
+        <div class="progress-bar
+        {% if b.percent < 80 %}
+            green
+        {% elif b.percent < 100 %}
+            orange
+        {% else %}
+            red
+        {% endif %}"
+        style="width:{{ b.percent if b.percent <= 100 else 100 }}%;">
+        </div>
+<a href="{{ url_for('delete_budget', id=b.id) }}"
+   class="delete-btn"
+   onclick="return confirm('Delete this budget?')">
+   🗑 Delete Budget
+</a>
+
+    </div>
+
+    <div class="stats">
+        <span>Spent ₹{{ b.spent }}</span>
+        <span>Budget ₹{{ b.budget }}</span>
+    </div>
+
+    <p>Remaining ₹{{ b.remaining }}</p>
+
+    {% if b.percent >= 100 %}
+        <p style="color:red;font-weight:bold;">
+            ⚠ Budget Exceeded
+        </p>
+    {% endif %}
+
+</div>
+
+{% endfor %}
+
+    </div>
+</div>
+
+</body>
+</html>

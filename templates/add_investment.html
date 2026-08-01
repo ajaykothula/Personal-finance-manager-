@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Add Investment</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/add_transaction.css') }}">
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="card">
+
+<h1>📈 Add Investment</h1>
+
+<form method="POST">
+
+<label>Investment Name</label>
+<input type="text" name="name" placeholder="Ex: SBI Mutual Fund" required>
+
+<label>Investment Type</label>
+<select name="type" required>
+<option value="">Select</option>
+<option>Stocks</option>
+<option>Mutual Fund</option>
+<option>Gold</option>
+<option>Fixed Deposit</option>
+<option>PPF</option>
+<option>Crypto</option>
+<option>Real Estate</option>
+<option>Other</option>
+</select>
+
+<label>Invested Amount (₹)</label>
+<input type="number" step="0.01" name="invested_amount" required>
+
+<label>Current Value (₹)</label>
+<input type="number" step="0.01" name="current_value" required>
+
+<label>Purchase Date</label>
+<input type="date" name="purchase_date" required>
+
+<button type="submit">
+💾 Save Investment
+</button>
+
+</form>
+
+</div>
+
+</div>
+
+</body>
+</html>

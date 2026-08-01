@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/buttons.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/transactions.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/charts.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/forms.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/loans.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/responsive.css') }}">
+</head>
+
+<body>
+
+<!-- Header -->
+<div class="header">
+    <div class="greeting">
+    <small>👋 {{ greeting }}</small>
+    <h2>{{ user.full_name }}</h2>
+</div>
+
+    <div class="profile">
+    <a href="/profile" class="profile-link">
+        👤 <span>Profile</span>
+    </a>
+</div>
+</div>
+<!-- Balance Card -->
+<div class="balance-card">
+    <p>Total Balance</p>
+    <h1>₹{{ balance }}</h1>
+    <span>💰 Savings: ₹{{ savings }}</span>
+</div>
+
+{% if budget_warnings %}
+    {% for warning in budget_warnings %}
+    <div class="budget-warning">
+        <h3>⚠️ {{ warning.category }} Budget Exceeded!</h3>
+
+        <p><strong>Budget:</strong> ₹{{ warning.budget }}</p>
+        <p><strong>Spent:</strong> ₹{{ warning.spent }}</p>
+        <p><strong>Exceeded By:</strong> ₹{{ warning.exceeded }}</p>
+
+        <small>
+            Please reduce your {{ warning.category }} expenses.
+        </small>
+    </div>
+    {% endfor %}
+{% endif %}
+
+<div class="chart-card">
+    <h3>🥧 Expense by Category</h3>
+    <canvas id="categoryChart"></canvas>
+</div>
+
+<div class="chart-card">
+    <h3>📊 Income vs Expense</h3>
+    <canvas id="financeChart"></canvas>
+</div>
+
+<!-- Statistics -->
+<div class="stats">
+    <div class="stat-card">
+        <div class="icon income">↑</div>
+        <h3>Income</h3>
+        <h2>₹{{ income }}</h2>
+    </div>
+
+    <div class="stat-card">
+        <div class="icon expense">↓</div>
+        <h3>Expenses</h3>
+        <h2>₹{{ expense }}</h2>
+    </div>
+
+    <div class="stat-card">
+        <div class="icon savings">₹</div>
+        <h3>Savings</h3>
+        <h2>₹{{ savings }}</h2>
+    </div>
+
+    <div class="stat-card">
+        <div class="icon budget">%</div>
+        <h3>Budget Used</h3>
+        <h2>{{ budget_used }}%</h2>
+    </div>
+
+</div>
+
+<div class="top-buttons">
+
+    <a href="{{ url_for('add_transaction') }}" class="add-btn">
+        ➕ Add Transaction
+    </a>
+
+    <a href="{{ url_for('import_excel') }}" class="import-btn">
+       Import Excel
+    </a>
+
+    <a href="{{ url_for('add_investment') }}" class="investment-btn">
+    📈 Add Investment
+</a>
+
+<a href="{{ url_for('assistant.assistant') }}" class="assistant-btn">
+<a href="{{ url_for('loans') }}" class="loan-btn">
+    💳 Add Loan
+</a>
+    <div class="fab-menu">
+    <button id="menuBtn" class="menu-btn">☰</button>
+
+    <div id="quickMenu" class="menu">
+
+        <a href="{{ url_for('report') }}">📅 Monthly Report</a>
+
+        <a href="{{ url_for('budget') }}">💰 Set Budget</a>
+
+        <a href="{{ url_for('analytics') }}">📊 Analytics</a>
+
+        <a href="{{ url_for('goals') }}">🎯 Savings Goals</a>
+
+        <a href="{{ url_for('investments') }}">📈 View Portfolio</a>
+
+        <a href="{{ url_for('export_excel') }}">📄 Export Excel</a>
+
+        <a href="{{ url_for('export_pdf') }}">📄 Export PDF</a>
+
+        <a href="{{ url_for('calendar') }}">📅 Calendar</a>
+
+    </div>
+
+</div>
+<form action="/dashboard" method="GET" class="search-form">
+
+    <input
+        type="text"
+        name="search"
+        placeholder="Search category..."
+        value="{{ request.args.get('search', '') }}">
+
+    <select name="type">
+        <option value="">All</option>
+        <option value="Income">Income</option>
+        <option value="Expense">Expense</option>
+    </select>
+
+    <button type="submit">🔍 Search</button>
+
+</form>
+<!-- Recent Transactions -->
+<h3 class="section-title">Recent Transactions</h3>
+
+<div class="transactions-container">
+
+{% if transactions %}
+
+{% for t in transactions %}
+
+<div class="transaction">
+
+    <div class="transaction-top">
+
+        <div class="transaction-info">
+            <h4>{{ t.category }}</h4>
+            <small>{{ t.date }}</small>
+
+            {% if t.recurring %}
+            <span class="recurring-badge">
+                🔁 {{ t.frequency }}
+            </span>
+            {% endif %}
+        </div>
+
+        <div class="{% if t.type=='Income' %}amount-income{% else %}amount-expense{% endif %}">
+            {% if t.type=="Income" %}+{% else %}-{% endif %}
+            ₹{{ t.amount }}
+        </div>
+
+    </div>
+
+    <div class="transaction-actions">
+
+        <a href="/edit-transaction/{{ t.id }}" class="edit-btn">
+            ✏ Edit
+        </a>
+
+        <a href="/delete-transaction/{{ t.id }}"
+           class="delete-btn"
+           onclick="return confirm('Delete this transaction?')">
+           🗑 Delete
+        </a>
+
+        {% if t.receipt %}
+        <a href="{{ url_for('static', filename='uploads/' + t.receipt) }}"
+           target="_blank"
+           class="receipt-btn">
+           📎 View Receipt
+        </a>
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endfor %}
+
+{% else %}
+
+<p class="no-transactions">
+No transactions found.
+</p>
+
+{% endif %}
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+const ctx = document.getElementById("financeChart");
+
+new Chart(ctx,{
+    type:"doughnut",
+    data:{
+        labels:["Income","Expense"],
+        datasets:[{
+            data:[{{ income }},{{ expense }}],
+            backgroundColor:["#22C55E","#EF4444"]
+        }]
+    }
+});
+
+const categoryCtx=document.getElementById("categoryChart");
+
+new Chart(categoryCtx,{
+    type:"pie",
+    data:{
+        labels:["Food","Fuel","Shopping","Travel","Other"],
+        datasets:[{
+            data:[
+                {{ food }},
+                {{ fuel }},
+                {{ shopping }},
+                {{ travel }},
+                {{ other }}
+            ],
+            backgroundColor:[
+                "#3B82F6",
+                "#22C55E",
+                "#F59E0B",
+                "#EF4444",
+                "#8B5CF6"
+            ]
+        }]
+    }
+});
+</script>
+
+<script>
+const menuBtn=document.getElementById("menuBtn");
+const quickMenu=document.getElementById("quickMenu");
+
+menuBtn.addEventListener("click",function(e){
+    e.stopPropagation();
+
+    quickMenu.style.display =
+        quickMenu.style.display==="block" ? "none" : "block";
+});
+
+document.addEventListener("click",function(){
+    quickMenu.style.display="none";
+});
+
+quickMenu.addEventListener("click",function(e){
+    e.stopPropagation();
+});
+</script>
+
+</body>
+</html>

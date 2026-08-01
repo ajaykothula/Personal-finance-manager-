@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan Tracker</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+</head>
+<body>
+
+<div class="container">
+
+    <h1>💳 Loan Tracker</h1>
+
+    <a href="{{ url_for('add_loan') }}" class="add-btn">
+        ➕ Add Loan
+    </a>
+
+    <br><br>
+
+    {% if loans %}
+
+    <table border="1" cellpadding="10" cellspacing="0" width="100%">
+        <tr>
+            <th>Loan</th>
+            <th>Type</th>
+            <th>Amount</th>
+            <th>EMI</th>
+            <th>Outstanding</th>
+            <th>Due Date</th>
+            <th>Status</th>
+        </tr>
+
+{% for loan in loans %}
+<tr>
+
+    <td>{{ loan.loan_name }}</td>
+
+    <td>{{ loan.loan_type }}</td>
+
+    <td>₹{{ loan.loan_amount }}</td>
+
+    <td>₹{{ loan.emi_amount }}</td>
+
+    <td>₹{{ loan.outstanding }}</td>
+
+    <td>{{ loan.due_date }}</td>
+
+    <td>
+        {% if loan.status == "Pending" %}
+            <span style="color:#EF4444;font-weight:bold;">
+                🔴 Pending
+            </span>
+        {% else %}
+            <span style="color:#22C55E;font-weight:bold;">
+                🟢 Paid
+            </span>
+        {% endif %}
+    </td>
+
+    <td>
+        <a href="/edit-loan/{{ loan.id }}" class="edit-btn">
+             Edit
+        </a>
+
+        <a href="/delete-loan/{{ loan.id }}"
+           class="delete-btn"
+           onclick="return confirm('Delete this loan?')">
+              Delete
+        </a>
+
+        {% if loan.status == "Pending" %}
+        <a href="/mark-paid/{{ loan.id }}" class="paid-btn">
+            ✅ Mark Paid
+        </a>
+        {% endif %}
+    </td>
+
+</tr>
+{% endfor %}
+    </table>
+
+    {% else %}
+
+    <h3>No loans added yet.</h3>
+
+    {% endif %}
+
+</div>
+<a href="{{ url_for('dashboard') }}" class="dashboard-btn">
+    🏠 Dashboard
+</a>
+</body>
+</html>

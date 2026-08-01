@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Admin - Investments</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+</head>
+
+<body>
+
+<div class="sidebar">
+<h2>👨‍💼 Admin</h2>
+
+<a href="{{ url_for('admin') }}">🏠 Dashboard</a>
+<a href="{{ url_for('admin_users') }}">👥 Users</a>
+<a href="{{ url_for('admin_transactions') }}">💰 Transactions</a>
+<a href="{{ url_for('admin_wallets') }}">💳 Wallets</a>
+<a class="active" href="{{ url_for('admin_investments') }}">📈 Investments</a>
+<a href="{{ url_for('admin_loans') }}">🏦 Loans</a>
+<a href="{{ url_for('admin_goals') }}">🎯 Goals</a>
+<a href="{{ url_for('logout') }}">🚪 Logout</a>
+</div>
+
+<div class="main">
+
+<h1>📈 Investment Management</h1>
+
+<table>
+
+<tr>
+<th>User</th>
+<th>Name</th>
+<th>Type</th>
+<th>Invested</th>
+<th>Current Value</th>
+<th>Action</th>
+</tr>
+
+{% for investment,user in investments %}
+
+<tr>
+
+<td>{{ user.full_name }}</td>
+<td>{{ investment.name }}</td>
+<td>{{ investment.type }}</td>
+<td>₹{{ investment.invested_amount }}</td>
+<td>₹{{ investment.current_value }}</td>
+
+<td>
+
+<a href="{{ url_for('admin_edit_investment', id=investment.id) }}" class="edit-btn">
+✏️ Edit
+</a>
+
+<a href="{{ url_for('admin_delete_investment', id=investment.id) }}" class="delete-btn">
+🗑 Delete
+</a>
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+</div>
+
+</body>
+</html>

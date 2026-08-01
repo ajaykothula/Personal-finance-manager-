@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Admin - Loans</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+</head>
+
+<body>
+
+<div class="sidebar">
+<h2>👨‍💼 Admin</h2>
+
+<a href="{{ url_for('admin') }}">🏠 Dashboard</a>
+<a href="{{ url_for('admin_users') }}">👥 Users</a>
+<a href="{{ url_for('admin_transactions') }}">💰 Transactions</a>
+<a href="{{ url_for('admin_wallets') }}">💳 Wallets</a>
+<a href="{{ url_for('admin_investments') }}">📈 Investments</a>
+<a class="active" href="{{ url_for('admin_loans') }}">🏦 Loans</a>
+<a href="{{ url_for('admin_goals') }}">🎯 Goals</a>
+<a href="{{ url_for('logout') }}">🚪 Logout</a>
+</div>
+
+<div class="main">
+
+<h1>🏦 Loan Management</h1>
+
+<table>
+
+<tr>
+<th>User</th>
+<th>Loan</th>
+<th>Amount</th>
+<th>Remaining</th>
+<th>Action</th>
+</tr>
+
+{% for loan,user in loans %}
+
+<tr>
+
+<td>{{ user.full_name }}</td>
+<td>{{ loan.loan_name }}</td>
+<td>₹{{ loan.loan_amount }}</td>
+<td>₹{{ loan.outstanding }}</td>
+<td>
+
+<a href="{{ url_for('admin_edit_loan', id=loan.id) }}" class="edit-btn">
+✏️ Edit
+</a>
+
+<a href="{{ url_for('admin_delete_loan', id=loan.id) }}" class="delete-btn">
+🗑 Delete
+</a>
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+</div>
+
+</body>
+</html>

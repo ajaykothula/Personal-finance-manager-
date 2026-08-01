@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Loan</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/add_transaction.css') }}">
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="card">
+
+        <h1>💳 Add Loan</h1>
+        <p>Track your EMIs and loans</p>
+
+        <form method="POST">
+
+            <label>Loan Name</label>
+            <input
+                type="text"
+                name="loan_name"
+                placeholder="Home Loan"
+                required
+            >
+
+            <label>Loan Type</label>
+
+            <select name="loan_type" required>
+                <option value="">Select</option>
+                <option>Home Loan</option>
+                <option>Car Loan</option>
+                <option>Education Loan</option>
+                <option>Personal Loan</option>
+                <option>Credit Card</option>
+                <option>Gold Loan</option>
+                <option>Other</option>
+            </select>
+
+            <label>Loan Amount (₹)</label>
+            <input
+                type="number"
+                step="0.01"
+                name="loan_amount"
+                required
+            >
+
+            <label>Interest Rate (%)</label>
+            <input
+                type="number"
+                step="0.01"
+                name="interest_rate"
+                required
+            >
+
+            <label>Monthly EMI (₹)</label>
+            <input
+                type="number"
+                step="0.01"
+                name="emi_amount"
+                required
+            >
+
+            <label>Outstanding Balance (₹)</label>
+            <input
+                type="number"
+                step="0.01"
+                name="outstanding"
+                required
+            >
+
+            <label>Next Due Date</label>
+            <input
+                type="date"
+                name="due_date"
+                required
+            >
+
+            <button type="submit">
+                💾 Save Loan
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+</body>
+</html>

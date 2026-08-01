@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Admin - Goals</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+</head>
+
+<body>
+
+<div class="sidebar">
+<h2>👨‍💼 Admin</h2>
+
+<a href="{{ url_for('admin') }}">🏠 Dashboard</a>
+<a href="{{ url_for('admin_users') }}">👥 Users</a>
+<a href="{{ url_for('admin_transactions') }}">💰 Transactions</a>
+<a href="{{ url_for('admin_wallets') }}">💳 Wallets</a>
+<a href="{{ url_for('admin_investments') }}">📈 Investments</a>
+<a href="{{ url_for('admin_loans') }}">🏦 Loans</a>
+<a class="active" href="{{ url_for('admin_goals') }}">🎯 Goals</a>
+<a href="{{ url_for('logout') }}">🚪 Logout</a>
+</div>
+
+<div class="main">
+
+<h1>🎯 Savings Goals</h1>
+
+<table>
+
+<tr>
+<th>User</th>
+<th>Goal</th>
+<th>Target</th>
+<th>Saved</th>
+<th>Action</th>
+</tr>
+
+{% for goal,user in goals %}
+
+<tr>
+
+<td>{{ user.full_name }}</td>
+<td>{{ goal.title }}</td>
+<td>₹{{ goal.target_amount }}</td>
+<td>₹{{ goal.saved_amount }}</td>
+
+<td>
+
+<a href="{{ url_for('admin_edit_goal', id=goal.id) }}" class="edit-btn">
+✏️ Edit
+</a>
+
+<a href="{{ url_for('admin_delete_goal', id=goal.id) }}" class="delete-btn">
+🗑 Delete
+</a>
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+</div>
+
+</body>
+</html>

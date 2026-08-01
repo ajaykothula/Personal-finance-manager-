@@ -1,0 +1,212 @@
+/* ==========================================
+   CHARTS.CSS
+========================================== */
+
+/* Chart Container */
+
+.chart-card{
+
+    background:#FFFFFF;
+
+    border-radius:20px;
+
+    padding:25px;
+
+    margin-bottom:25px;
+
+    box-shadow:0 8px 20px rgba(0,0,0,.08);
+
+    transition:.3s;
+}
+
+.chart-card:hover{
+
+    transform:translateY(-4px);
+
+    box-shadow:0 15px 30px rgba(0,0,0,.12);
+}
+
+.chart-card h3{
+
+    text-align:center;
+
+    color:#111827;
+
+    margin-bottom:20px;
+
+    font-size:22px;
+
+    font-weight:700;
+}
+
+/* Canvas */
+
+.chart-card canvas{
+
+    display:block;
+
+    margin:auto;
+
+    max-width:100%;
+
+    width:320px !important;
+
+    height:320px !important;
+}
+
+/* Finance Doughnut */
+
+#financeChart{
+
+    width:320px !important;
+
+    height:320px !important;
+}
+
+/* Category Pie */
+
+#categoryChart{
+
+    width:320px !important;
+
+    height:320px !important;
+}
+
+/* Chart Grid */
+
+.chart-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fit,minmax(350px,1fr));
+
+    gap:25px;
+
+    margin:25px 0;
+}
+
+/* Chart Legend */
+
+.chart-legend{
+
+    display:flex;
+
+    justify-content:center;
+
+    flex-wrap:wrap;
+
+    gap:15px;
+
+    margin-top:15px;
+}
+
+.chart-item{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    font-size:14px;
+
+    color:#4B5563;
+}
+
+.chart-color{
+
+    width:15px;
+
+    height:15px;
+
+    border-radius:50%;
+}
+
+/* Colors */
+
+.chart-income{
+    background:#22C55E;
+}
+
+.chart-expense{
+    background:#EF4444;
+}
+
+.chart-food{
+    background:#3B82F6;
+}
+
+.chart-fuel{
+    background:#F59E0B;
+}
+
+.chart-shopping{
+    background:#8B5CF6;
+}
+
+.chart-travel{
+    background:#10B981;
+}
+
+.chart-other{
+    background:#6B7280;
+}
+
+/* Loading Animation */
+
+.chart-loading{
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    height:300px;
+
+    color:#2563EB;
+
+    font-size:18px;
+
+    font-weight:600;
+}
+
+/* Chart Footer */
+
+.chart-footer{
+
+    text-align:center;
+
+    margin-top:15px;
+
+    color:#6B7280;
+
+    font-size:14px;
+}
+
+/* Animation */
+
+.chart-card{
+
+    animation:chartFade .6s ease;
+}
+
+@keyframes chartFade{
+
+from{
+
+opacity:0;
+
+transform:translateY(20px);
+
+}
+
+to{
+
+opacity:1;
+
+transform:translateY(0);
+
+}
+
+}

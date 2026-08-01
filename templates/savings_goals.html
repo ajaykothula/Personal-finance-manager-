@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Savings Goals</title>
+
+<link rel="preconnect"
+href="https://fonts.googleapis.com">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+rel="stylesheet">
+
+<link rel="stylesheet"
+href="{{ url_for('static',
+filename='css/savings_goals.css') }}">
+
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="header">
+
+<h1>🎯 Savings Goals</h1>
+
+<a href="{{ url_for('dashboard') }}"
+class="back-btn">
+
+⬅ Dashboard
+
+</a>
+
+</div>
+
+<div class="goal-form">
+
+<form method="POST">
+
+<input
+
+type="text"
+
+name="title"
+
+placeholder="Goal Name"
+
+required>
+
+<input
+
+type="number"
+
+step="0.01"
+
+name="target_amount"
+
+placeholder="Target Amount (₹)"
+
+required>
+
+<button type="submit">
+
+➕ Add Goal
+
+</button>
+
+</form>
+
+</div>
+
+<div class="goals">
+
+{% for goal in goals %}
+
+{% set progress=(savings/goal.target_amount)*100 %}
+
+{% if progress>100 %}
+
+{% set progress=100 %}
+
+{% endif %}
+
+<div class="goal-card">
+
+<h2>
+
+{{ goal.title }}
+
+</h2>
+
+<p>
+
+₹{{ savings }}
+
+/
+
+₹{{ goal.target_amount }}
+
+</p>
+
+<div class="progress">
+
+<div
+class="progress-bar"
+
+style="width:{{ progress }}%;">
+
+</div>
+
+</div>
+
+<p>
+
+{{ "%.1f"|format(progress) }}%
+
+Completed
+
+</p>
+
+{% if progress>=100 %}
+
+<div class="success">
+
+🎉 Goal Achieved!
+
+</div>
+
+{% else %}
+
+<p>
+
+Remaining:
+
+₹{{ "%.2f"|format(goal.target_amount-savings) }}
+
+</p>
+
+{% endif %}
+<div class="goal-actions">
+
+<a
+href="{{ url_for('edit_goal', id=goal.id) }}"
+class="edit-btn">
+
+ Edit
+
+</a>
+
+<a
+href="{{ url_for('delete_goal', id=goal.id) }}"
+class="delete-btn"
+
+onclick="return confirm('Delete this goal?')">
+
+ Delete
+
+</a>
+<a href="{{ url_for('add_money_to_goal', id=goal.id) }}"
+class="edit-btn">
+
+  Add Money
+
+</a>
+</div>
+</div>
+
+{% endfor %}
+
+</div>
+
+</div>
+
+</body>
+
+</html>

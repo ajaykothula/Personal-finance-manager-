@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<title>Budget</title>
+
+<link
+rel="stylesheet"
+href="{{ url_for('static', filename='css/budget.css') }}">
+
+</head>
+
+<body>
+
+<h1>📊 Monthly Budget</h1>
+
+<form method="POST">
+
+<select name="category" required>
+
+<option>Food</option>
+<option>Fuel</option>
+<option>Shopping</option>
+<option>Travel</option>
+<option>Bills</option>
+<option>Medical</option>
+<option>Entertainment</option>
+<option>Education</option>
+
+</select>
+
+<input
+type="number"
+step="0.01"
+name="amount"
+placeholder="Budget Amount"
+required>
+
+<button>
+
+Save Budget
+
+</button>
+
+</form>
+
+{% for b in budget_data %}
+
+<div class="budget-card">
+
+<h2>{{ b.category }}</h2>
+
+<div class="progress">
+
+<div
+class="progress-bar
+
+{% if b.percent<80 %}
+
+green
+
+{% elif b.percent<100 %}
+
+orange
+
+{% else %}
+
+red
+
+{% endif %}"
+
+style="width:{{ b.percent if b.percent<100 else 100 }}%;">
+
+</div>
+
+</div>
+
+<div class="stats">
+
+<span>
+
+Spent ₹{{ b.spent }}
+
+</span>
+
+<span>
+
+Budget ₹{{ b.budget }}
+
+</span>
+
+</div>
+
+<p>
+
+Remaining ₹{{ b.remaining }}
+
+</p>
+
+{% if b.percent>=100 %}
+
+<p style="color:red">
+
+⚠ Budget Exceeded
+
+</p>
+
+{% endif %}
+
+</div>
+
+{% endfor %}
+
+</body>
+
+</html>

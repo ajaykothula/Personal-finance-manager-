@@ -1,0 +1,100 @@
+/* ==========================================
+   RESPONSIVE.CSS
+========================================== */
+
+@media(max-width:992px){
+
+.header{
+    flex-direction:column;
+    align-items:flex-start;
+    gap:15px;
+}
+
+.top-buttons{
+    justify-content:center;
+}
+
+.chart-grid{
+    grid-template-columns:1fr;
+}
+
+.stats{
+    grid-template-columns:repeat(2,1fr);
+}
+
+}
+
+@media(max-width:768px){
+
+body{
+    padding:15px;
+}
+
+.balance-card h1{
+    font-size:30px;
+}
+
+.stats{
+    grid-template-columns:1fr;
+}
+
+.top-buttons a,
+.loan-btn{
+    width:100%;
+}
+
+.transaction-top{
+    flex-direction:column;
+    align-items:flex-start;
+    gap:10px;
+}
+
+.transaction-actions{
+    justify-content:flex-start;
+}
+
+table{
+    display:block;
+    overflow-x:auto;
+}
+
+.chart-card canvas{
+    width:260px !important;
+    height:260px !important;
+}
+
+}
+
+@media(max-width:480px){
+
+.greeting h2{
+    font-size:22px;
+}
+
+.balance-card{
+    padding:20px;
+}
+
+.balance-card h1{
+    font-size:26px;
+}
+
+.profile-link{
+    width:100%;
+    justify-content:center;
+}
+
+button,
+.top-buttons a{
+    font-size:14px;
+}
+
+.chart-card{
+    padding:15px;
+}
+
+.transaction{
+    padding:15px;
+}
+
+}

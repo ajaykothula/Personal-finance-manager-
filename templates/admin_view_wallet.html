@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>View Wallet</title>
+
+<link rel="stylesheet"
+href="{{ url_for('static', filename='css/admin.css') }}">
+
+</head>
+
+<body>
+
+<div class="main">
+
+<h1>💳 Wallet Details</h1>
+
+<div class="card">
+
+<h2>{{ wallet.name }}</h2>
+
+<p><strong>User:</strong> {{ user.full_name }}</p>
+
+<p><strong>Balance:</strong> ₹{{ wallet.balance }}</p>
+
+<p><strong>Wallet ID:</strong> {{ wallet.id }}</p>
+
+</div>
+
+<a href="{{ url_for('admin_wallets') }}"
+class="view-btn">
+
+⬅ Back
+
+</a>
+
+</div>
+
+</body>
+
+</html>

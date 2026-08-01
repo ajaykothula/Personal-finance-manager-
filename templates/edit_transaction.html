@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Edit Transaction</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/add_transaction.css') }}">
+</head>
+<body>
+
+<div class="container">
+
+    <div class="card">
+
+        <h1>✏️ Edit Transaction</h1>
+<p>Update your transaction details</p>
+        <p>Record your income and expenses</p>
+
+        <form method="POST">
+<label>Wallet</label>
+
+<select name="wallet_id">
+
+    <option value=""
+    {% if not transaction.wallet_id %}selected{% endif %}>
+        🚫 None
+    </option>
+
+    {% for wallet in wallets %}
+        <option value="{{ wallet.id }}"
+        {% if wallet.id == transaction.wallet_id %}selected{% endif %}>
+            {{ wallet.name }}
+        </option>
+    {% endfor %}
+
+</select>
+
+</select>
+<label>Transaction Type</label>
+
+<select name="type" required>
+    <option value="Income" {% if transaction.type == "Income" %}selected{% endif %}>
+        Income
+    </option>
+
+    <option value="Expense" {% if transaction.type == "Expense" %}selected{% endif %}>
+        Expense
+    </option>
+</select>
+     
+
+<label>Category</label>
+
+<select name="category" required>
+    {% for cat in ["Salary","Food","Fuel","Shopping","Travel","Bills","Medical","Entertainment","Education","Investment","Other"] %}
+        <option value="{{ cat }}"
+            {% if transaction.category == cat %}selected{% endif %}>
+            {{ cat }}
+        </option>
+    {% endfor %}
+</select>
+            <label>Amount (₹)</label>
+
+             <input
+    type="number"
+    name="amount"
+    value="{{ transaction.amount }}"
+    required>
+            
+
+            <label>Note</label>
+
+            <input
+    type="text"
+    name="note"
+    value="{{ transaction.note }}">
+
+            <label>Date</label>
+
+             <input
+    type="date"
+    name="date"
+    value="{{ transaction.date }}"
+    required>
+
+            <button type="submit">
+    💾 Update Transaction
+</button>
+
+        </form>
+
+    </div>
+
+</div>
+
+</body>
+</html>

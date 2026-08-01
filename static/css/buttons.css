@@ -1,0 +1,319 @@
+/* =====================================
+   BUTTONS.CSS
+===================================== */
+
+/* Top Buttons */
+
+.top-buttons{
+    display:flex;
+    flex-wrap:wrap;
+    gap:15px;
+    margin:25px 0;
+}
+
+/* Common Button Style */
+
+.top-buttons a,
+.menu-btn,
+.loan-btn{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    width:170px;
+    height:55px;
+
+    border-radius:12px;
+    text-decoration:none;
+    font-size:15px;
+    font-weight:600;
+
+    color:#fff;
+
+    transition:.3s;
+    cursor:pointer;
+
+    box-shadow:0 5px 15px rgba(0,0,0,.12);
+}
+
+/* Add Transaction */
+
+.add-btn{
+    background:#2563EB;
+}
+
+.add-btn:hover{
+    background:#1D4ED8;
+}
+
+/* Import */
+
+.import-btn{
+    background:#16A34A;
+}
+
+.import-btn:hover{
+    background:#15803D;
+}
+
+/* Investment */
+
+.investment-btn{
+    background:#0EA5E9;
+}
+
+.investment-btn:hover{
+    background:#0284C7;
+}
+
+/* AI */
+
+.assistant-btn{
+    background:#7C3AED;
+}
+
+.assistant-btn:hover{
+    background:#6D28D9;
+}
+
+/* Loan */
+
+.loan-btn{
+    background:#22C55E;
+}
+
+.loan-btn:hover{
+    background:#16A34A;
+}
+
+/* Floating Menu */
+
+.menu-btn,
+#menuBtn{
+
+    background:#111827;
+
+    width:55px;
+    height:55px;
+
+    border:none;
+
+    border-radius:50%;
+
+    font-size:28px;
+
+    color:#fff;
+}
+
+.menu-btn:hover,
+#menuBtn:hover{
+
+    background:#000;
+
+    transform:rotate(90deg);
+}
+
+/* Quick Menu */
+
+.menu{
+
+    display:none;
+
+    position:absolute;
+
+    right:0;
+
+    top:65px;
+
+    width:240px;
+
+    background:#fff;
+
+    border-radius:15px;
+
+    overflow:hidden;
+
+    box-shadow:0 10px 30px rgba(0,0,0,.18);
+
+    z-index:999;
+
+}
+
+.menu a{
+
+    display:block;
+
+    padding:14px 18px;
+
+    color:#111827;
+
+    text-decoration:none;
+
+    font-weight:500;
+
+    border-bottom:1px solid #eee;
+
+}
+
+.menu a:last-child{
+    border-bottom:none;
+}
+
+.menu a:hover{
+
+    background:#2563EB;
+
+    color:#fff;
+}
+
+/* Dashboard Buttons */
+
+.edit-btn{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    padding:8px 16px;
+
+    background:#2563EB;
+
+    color:white;
+
+    border-radius:8px;
+
+    text-decoration:none;
+
+    font-weight:600;
+}
+
+.edit-btn:hover{
+
+    background:#1D4ED8;
+}
+
+.delete-btn{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    padding:8px 16px;
+
+    background:#EF4444;
+
+    color:white;
+
+    border-radius:8px;
+
+    text-decoration:none;
+
+    font-weight:600;
+}
+
+.delete-btn:hover{
+
+    background:#DC2626;
+}
+
+/* Receipt */
+
+.receipt-btn{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    padding:8px 16px;
+
+    background:#10B981;
+
+    color:white;
+
+    border-radius:8px;
+
+    text-decoration:none;
+
+    font-weight:600;
+}
+
+.receipt-btn:hover{
+
+    background:#059669;
+}
+
+/* Paid Button */
+
+.paid-btn{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    padding:8px 16px;
+
+    background:#22C55E;
+
+    color:white;
+
+    border-radius:8px;
+
+    text-decoration:none;
+
+    font-weight:600;
+}
+
+.paid-btn:hover{
+
+    background:#16A34A;
+}
+
+/* Export Buttons */
+
+.excel-btn{
+
+    background:#16A34A;
+
+    color:white;
+
+    padding:10px 18px;
+
+    border-radius:8px;
+
+    text-decoration:none;
+
+    font-weight:600;
+}
+
+.excel-btn:hover{
+
+    background:#15803D;
+}
+
+.pdf-btn{
+
+    background:#DC2626;
+
+    color:white;
+
+    padding:10px 18px;
+
+    border-radius:8px;
+
+    text-decoration:none;
+
+    font-weight:600;
+}
+
+.pdf-btn:hover{
+
+    background:#B91C1C;
+}

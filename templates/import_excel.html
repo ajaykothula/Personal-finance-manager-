@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Import Excel</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/add_transaction.css') }}">
+</head>
+<body>
+
+<div class="container">
+    <div class="card">
+
+        <h1>📥 Import Transactions</h1>
+        <p>Upload an Excel (.xlsx) file</p>
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    {% for message in messages %}
+      <div style="color:red; margin:10px 0;">
+        {{ message }}
+      </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+        <form method="POST" enctype="multipart/form-data">
+
+            <label>Select Excel File</label>
+
+            <input
+                type="file"
+                name="excel_file"
+                accept=".xlsx"
+                required>
+
+            <button type="submit">
+                📥 Import Excel
+            </button>
+
+        </form>
+
+    </div>
+</div>
+
+</body>
+</html>

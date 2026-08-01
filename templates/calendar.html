@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Calendar</title>
+
+<link rel="preconnect"
+href="https://fonts.googleapis.com">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+rel="stylesheet">
+
+<link rel="stylesheet"
+href="{{ url_for('static', filename='css/calendar.css') }}">
+
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="top-bar">
+
+<h1>📅 {{ month_name }} {{ year }}</h1>
+
+<div class="nav-buttons">
+
+<a href="{{ url_for('calendar_view', month=(12 if month==1 else month-1), year=(year-1 if month==1 else year)) }}">
+
+⬅ Previous
+
+</a>
+
+<a href="{{ url_for('dashboard') }}">
+
+🏠 Dashboard
+
+</a>
+
+<a href="{{ url_for('calendar_view', month=(1 if month==12 else month+1), year=(year+1 if month==12 else year)) }}">
+
+Next ➡
+
+</a>
+
+</div>
+
+</div>
+
+<div class="calendar">
+
+<div class="day-name">Mon</div>
+<div class="day-name">Tue</div>
+<div class="day-name">Wed</div>
+<div class="day-name">Thu</div>
+<div class="day-name">Fri</div>
+<div class="day-name">Sat</div>
+<div class="day-name">Sun</div>
+{% for week in calendar_days %}
+
+    {% for day in week %}
+
+        {% if day == 0 %}
+
+            <div class="empty-day"></div>
+
+        {% else %}
+
+            <a href="{{ url_for('day_transactions', year=year, month=month, day=day) }}"
+   class="calendar-day">
+
+                <div class="date">{{ day }}</div>
+
+                {% if day in daily_transactions %}
+
+                    {% if daily_transactions[day].income > 0 %}
+                        <div class="income">
+                            🟢 ₹{{ "%.2f"|format(daily_transactions[day].income) }}
+                        </div>
+                    {% endif %}
+
+                    {% if daily_transactions[day].expense > 0 %}
+                        <div class="expense">
+                            🔴 ₹{{ "%.2f"|format(daily_transactions[day].expense) }}
+                        </div>
+                    {% endif %}
+
+                {% endif %}
+
+            </a>
+
+        {% endif %}
+
+    {% endfor %}
+
+{% endfor %}
+
+</div>
+

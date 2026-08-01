@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Transactions</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+</head>
+
+<body>
+
+<div class="sidebar">
+
+    <h2>👨‍💼 Admin</h2>
+
+    <a href="{{ url_for('admin') }}">🏠 Dashboard</a>
+
+    <a href="{{ url_for('admin_users') }}">👥 Users</a>
+
+    <a class="active" href="{{ url_for('admin_transactions') }}">
+        💰 Transactions
+    </a>
+    <a href="{{ url_for('admin_wallets') }}">💳 Wallets</a>
+    <a href="{{ url_for('admin_investments') }}">📈 Investments</a>
+<a href="{{ url_for('admin_loans') }}">💳 Loans</a>
+<a href="{{ url_for('admin_goals') }}">🎯 Goals</a>
+    <a href="{{ url_for('logout') }}">
+        🚪 Logout
+    </a>
+
+</div>
+
+<div class="main">
+
+<h1>💰 Transaction Management</h1>
+
+<div class="cards">
+
+    <div class="card">
+        <h2>{{ total_count }}</h2>
+        <p>Total Transactions</p>
+    </div>
+
+    <div class="card">
+        <h2>{{ income_count }}</h2>
+        <p>Income</p>
+    </div>
+
+    <div class="card">
+        <h2>{{ expense_count }}</h2>
+        <p>Expenses</p>
+    </div>
+
+    <div class="card">
+        <h2>{{ today_count }}</h2>
+        <p>Today</p>
+    </div>
+
+</div>
+
+<select id="typeFilter" class="search-box">
+    <option value="">All Transactions</option>
+    <option value="Income">Income</option>
+    <option value="Expense">Expense</option>
+</select>
+
+<input
+type="text"
+id="searchTransaction"
+placeholder="🔍 Search..."
+class="search-box">
+
+<table id="transactionTable">
+
+<thead>
+
+<tr>
+    <th>User</th>
+    <th>Date</th>
+    <th>Type</th>
+    <th>Category</th>
+    <th>Amount</th>
+    <th>Note</th>
+    <th>Action</th>
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for transaction, user in transactions %}
+
+<tr>
+
+<td>{{ user.full_name }}</td>
+<td>{{ transaction.date }}</td>
+<td>{{ transaction.type }}</td>
+<td>{{ transaction.category }}</td>
+<td>₹{{ transaction.amount }}</td>
+<td>{{ transaction.note }}</td>
+
+<td>
+
+<a href="{{ url_for('admin_edit_transaction', id=transaction.id) }}" class="unblock-btn">
+  Edit
+</a>
+
+<a href="{{ url_for('admin_delete_transaction', id=transaction.id) }}"
+class="delete-btn"
+onclick="return confirm('Delete this transaction?')">
+  Delete
+</a>
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+<script>
+
+const search = document.getElementById("searchTransaction");
+const filter = document.getElementById("typeFilter");
+
+function filterTable() {
+
+    let searchValue = search.value.toLowerCase();
+    let typeValue = filter.value;
+
+    let rows = document.querySelectorAll("#transactionTable tbody tr");
+
+    rows.forEach(function(row){
+
+        let text = row.innerText.toLowerCase();
+
+        let matchesSearch = text.includes(searchValue);
+
+        let matchesType = true;
+
+        if(typeValue !== ""){
+            matchesType = row.innerText.includes(typeValue);
+        }
+
+        row.style.display = (matchesSearch && matchesType) ? "" : "none";
+
+    });
+
+}
+
+search.addEventListener("keyup", filterTable);
+filter.addEventListener("change", filterTable);
+
+</script>
+
+</body>
+</html>

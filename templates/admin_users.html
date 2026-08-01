@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Admin - Users</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+
+</head>
+
+<body>
+
+<div class="sidebar">
+
+<h2>👨‍💼 Admin</h2>
+
+<a href="{{ url_for('admin') }}">🏠 Dashboard</a>
+
+<a class="active" href="{{ url_for('admin_users') }}">👥 Users</a>
+
+<a href="{{ url_for('admin_transactions') }}">
+💰 Transactions
+</a>
+<a href="#">💳 Wallets</a>
+
+<a href="#">📈 Investments</a>
+
+<a href="#">💸 Loans</a>
+
+<a href="#">🎯 Goals</a>
+
+<a href="{{ url_for('logout') }}">🚪 Logout</a>
+
+</div>
+
+<div class="main">
+
+<h1>👥 User Management</h1>
+
+<input
+type="text"
+id="searchUser"
+placeholder="🔍 Search user..."
+class="search-box">
+
+<table id="usersTable">
+
+<thead>
+
+<tr>
+
+<th>ID</th>
+
+<th>Name</th>
+
+<th>Email</th>
+
+<th>Admin</th>
+
+<th>Status</th>
+
+<th>Actions</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for user in users %}
+
+<tr>
+
+<td>{{ user.id }}</td>
+
+<td>{{ user.full_name }}</td>
+
+<td>{{ user.email }}</td>
+
+<td>
+
+{% if user.is_admin %}
+👑
+{% else %}
+—
+{% endif %}
+
+</td>
+
+<td>
+
+{% if user.is_blocked %}
+<span class="blocked">Blocked</span>
+{% else %}
+<span class="active-user">Active</span>
+{% endif %}
+
+</td>
+
+<td>
+
+{% if not user.is_admin %}
+
+<a href="{{ url_for('toggle_block', id=user.id) }}"
+class="{% if user.is_blocked %}unblock-btn{% else %}block-btn{% endif %}">
+
+{% if user.is_blocked %}
+🔓 Unblock
+{% else %}
+🚫 Block
+{% endif %}
+
+</a>
+
+<a href="{{ url_for('admin_delete_user', id=user.id) }}"
+class="delete-btn"
+onclick="return confirm('Delete this user and all data?')">
+
+🗑 Delete
+
+</a>
+
+{% endif %}
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+<script>
+
+const search=document.getElementById("searchUser");
+
+search.addEventListener("keyup",function(){
+
+let filter=this.value.toLowerCase();
+
+let rows=document.querySelectorAll("#usersTable tbody tr");
+
+rows.forEach(function(row){
+
+let text=row.innerText.toLowerCase();
+
+row.style.display=text.includes(filter)?"":"none";
+
+});
+
+});
+
+</script>
+
+</body>
+
+</html>

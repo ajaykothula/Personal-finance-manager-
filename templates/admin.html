@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Admin Panel</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+
+</head>
+
+<body>
+
+<div class="sidebar">
+
+    <h2>👨‍💼 Admin</h2>
+
+    <a href="{{ url_for('admin') }}">🏠 Dashboard</a>
+
+    <a href="{{ url_for('admin_users') }}">👥 Users</a>
+
+    <a href="#">💰 Transactions</a>
+
+    <a href="#">💳 Wallets</a>
+
+    <a href="#">📈 Investments</a>
+
+    <a href="#">💸 Loans</a>
+
+    <a href="#">🎯 Goals</a>
+    <a href="{{ url_for('admin_analytics') }}">📊 Analytics</a>
+    <a href="{{ url_for('logout') }}">🚪 Logout</a>
+
+</div>
+<div class="main">
+
+<h1>👨‍💼 Admin Dashboard</h1>
+
+<div class="cards">
+
+<div class="card">
+<h2>{{ total_users }}</h2>
+<p>Users</p>
+</div>
+
+<div class="card">
+<h2>{{ total_transactions }}</h2>
+<p>Transactions</p>
+</div>
+
+<div class="card">
+<h2>{{ total_wallets }}</h2>
+<p>Wallets</p>
+</div>
+
+<div class="card">
+<h2>{{ total_investments }}</h2>
+<p>Investments</p>
+</div>
+
+<div class="card">
+<h2>{{ total_loans }}</h2>
+<p>Loans</p>
+</div>
+
+<div class="card">
+<h2>{{ total_goals }}</h2>
+<p>Goals</p>
+</div>
+
+</div>
+
+</div>
+</script>
+</body>
+</html>

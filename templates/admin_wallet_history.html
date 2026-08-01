@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Wallet History</title>
+
+<link rel="stylesheet"
+href="{{ url_for('static', filename='css/admin.css') }}">
+
+</head>
+
+<body>
+
+<div class="main">
+
+<h1>📄 Wallet History</h1>
+
+<h2>{{ wallet.name }}</h2>
+
+<table>
+
+<tr>
+
+<th>Date</th>
+<th>Type</th>
+<th>Category</th>
+<th>Amount</th>
+<th>Note</th>
+
+</tr>
+
+{% for transaction in transactions %}
+
+<tr>
+
+<td>{{ transaction.date }}</td>
+<td>{{ transaction.type }}</td>
+<td>{{ transaction.category }}</td>
+<td>₹{{ transaction.amount }}</td>
+<td>{{ transaction.note }}</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+<br>
+
+<a href="{{ url_for('admin_wallets') }}"
+class="view-btn">
+
+⬅ Back
+
+</a>
+
+</div>
+
+</body>
+
+</html>

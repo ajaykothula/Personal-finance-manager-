@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Analytics</title>
+
+    <link rel="stylesheet"
+    href="{{ url_for('static', filename='css/admin.css') }}">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+<div class="sidebar">
+
+<h2>👨‍💼 Admin</h2>
+
+<a href="{{ url_for('admin') }}">🏠 Dashboard</a>
+<a href="{{ url_for('admin_users') }}">👥 Users</a>
+<a href="{{ url_for('admin_transactions') }}">💰 Transactions</a>
+<a href="{{ url_for('admin_wallets') }}">💳 Wallets</a>
+<a href="{{ url_for('admin_investments') }}">📈 Investments</a>
+<a href="{{ url_for('admin_loans') }}">🏦 Loans</a>
+<a href="{{ url_for('admin_goals') }}">🎯 Goals</a>
+
+<a class="active"
+href="{{ url_for('admin_analytics') }}">
+📊 Analytics
+</a>
+
+<a href="{{ url_for('logout') }}">🚪 Logout</a>
+
+</div>
+
+<div class="main">
+
+<h1>📊 Admin Analytics</h1>
+
+<div class="chart-grid">
+
+    <div class="chart-card">
+        <h3>System Overview</h3>
+        <canvas id="barChart"></canvas>
+    </div>
+
+    <div class="chart-card">
+        <h3>Modules</h3>
+        <canvas id="pieChart"></canvas>
+    </div>
+
+    <div class="chart-card">
+        <h3>Growth</h3>
+        <canvas id="lineChart"></canvas>
+    </div>
+
+    <div class="chart-card">
+        <h3>User Distribution</h3>
+        <canvas id="doughnutChart"></canvas>
+    </div>
+
+</div>
+<div class="chart-container">
+    <canvas id="adminChart"></canvas>
+</div>
+<h2>👥 User Analytics</h2>
+
+<div class="chart-card">
+    <canvas id="userChart"></canvas>
+</div>
+</div>
+
+<script>
+
+new Chart(document.getElementById("adminChart"),{
+
+    type:"bar",
+
+    data:{
+        labels:[
+            "Users",
+            "Transactions",
+            "Wallets",
+            "Investments",
+            "Loans",
+            "Goals"
+        ],
+
+        datasets:[{
+
+            label:"System Statistics",
+
+            data:[
+                {{ total_users }},
+                {{ total_transactions }},
+                {{ total_wallets }},
+                {{ total_investments }},
+                {{ total_loans }},
+                {{ total_goals }}
+            ],
+
+            backgroundColor:[
+                "#2563EB",
+                "#10B981",
+                "#F59E0B",
+                "#8B5CF6",
+                "#EF4444",
+                "#06B6D4"
+            ]
+
+        }]
+    },
+
+    options:{
+        responsive:true,
+        maintainAspectRatio:false
+    }
+
+});
+
+</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+const labels = [
+    "Users",
+    "Transactions",
+    "Wallets",
+    "Investments",
+    "Loans",
+    "Goals"
+];
+
+const values = [
+    {{ total_users }},
+    {{ total_transactions }},
+    {{ total_wallets }},
+    {{ total_investments }},
+    {{ total_loans }},
+    {{ total_goals }}
+];
+
+// Bar Chart
+new Chart(document.getElementById("barChart"),{
+    type:"bar",
+    data:{
+        labels:labels,
+        datasets:[{
+            label:"Count",
+            data:values
+        }]
+    }
+});
+
+// Pie Chart
+new Chart(document.getElementById("pieChart"),{
+    type:"pie",
+    data:{
+        labels:labels,
+        datasets:[{
+            data:values
+        }]
+    }
+});
+
+// Line Chart
+new Chart(document.getElementById("lineChart"),{
+    type:"line",
+    data:{
+        labels:labels,
+        datasets:[{
+            label:"Statistics",
+            data:values,
+            fill:false
+        }]
+    }
+});
+
+// Doughnut Chart
+new Chart(document.getElementById("doughnutChart"),{
+    type:"doughnut",
+    data:{
+        labels:labels,
+        datasets:[{
+            data:values
+        }]
+    }
+});
+
+</script>
+<script>
+
+const userLabels = [
+{% for name, count in user_transaction_stats %}
+"{{ name }}",
+{% endfor %}
+];
+
+const userValues = [
+{% for name, count in user_transaction_stats %}
+{{ count }},
+{% endfor %}
+];
+
+new Chart(document.getElementById("userChart"), {
+    type: "bar",
+    data: {
+        labels: userLabels,
+        datasets: [{
+            label: "Transactions per User",
+            data: userValues,
+            backgroundColor: "#2563EB"
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false
+    }
+});
+
+</script>
+</body>
+</html>

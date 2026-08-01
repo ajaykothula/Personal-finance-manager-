@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Dashboard</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+
+</head>
+<body>
+
+<div class="container">
+
+<!-- HEADER -->
+
+<header class="header">
+
+<div class="welcome">
+<h5>{{ greeting }}</h5>
+<h2>{{ user.full_name }}</h2>
+</div>
+
+</header>
+<div class="notifications">
+
+{% if notifications %}
+
+<h3>🔔 Notifications</h3>
+
+{% for n in notifications %}
+
+<div class="notification-card">
+
+<span>{{ n.icon }}</span>
+
+<span>{{ n.message }}</span>
+
+</div>
+
+{% endfor %}
+
+{% endif %}
+
+</div>
+<div class="ai-section">
+
+<h2>🤖 AI Financial Insights</h2>
+
+{% if ai_insights %}
+
+{% for insight in ai_insights %}
+
+<div class="ai-card">
+
+{{ insight }}
+
+</div>
+
+{% endfor %}
+
+{% else %}
+
+<div class="ai-card">
+
+No insights available yet.
+
+</div>
+
+{% endif %}
+
+</div>
+<div class="health-card">
+
+    <h2>💚 Financial Health Score</h2>
+
+    <div class="score-circle">
+        {{ health_score }}/100
+    </div>
+
+    {% if health_score >= 80 %}
+        <p class="excellent">🟢 Excellent Financial Health</p>
+    {% elif health_score >= 50 %}
+        <p class="good">🟡 Good, but can improve</p>
+    {% else %}
+        <p class="poor">🔴 Needs Attention</p>
+    {% endif %}
+
+    <div class="progress-bar">
+        <div class="progress-fill"
+             style="width: {{ health_score }}%;">
+        </div>
+    </div>
+
+</div>
+<!-- BALANCE -->
+
+<div class="balance-card">
+<div class="wallet-card">
+    <h3>💳 My Wallets</h3>
+
+    {% for wallet in wallets %}
+    <div class="wallet-item">
+        <span>{{ wallet.name }}</span>
+        <strong>₹{{ wallet.balance }}</strong>
+    </div>
+    {% endfor %}
+</div>
+<p>Total Balance</p>
+
+<h1>₹{{ balance }}</h1>
+
+<div class="balance-row">
+
+<div>
+<small>Income</small>
+<h3>₹{{ income }}</h3>
+</div>
+
+<div>
+<small>Expense</small>
+<h3>₹{{ expense }}</h3>
+</div>
+
+<div>
+<small>Savings</small>
+<h3>₹{{ savings }}</h3>
+</div>
+<div>
+<small>Budget</small>
+<h3>₹{{budget_used}}%</h3>
+</div>
+</div>
+
+</div>
+<!-- SEARCH -->
+
+<form action="/dashboard" method="GET" class="search-form">
+
+<input
+type="text"
+name="search"
+placeholder="Search category..."
+value="{{ request.args.get('search','') }}">
+
+<select name="type">
+
+<option value="">All</option>
+<option value="Income">Income</option>
+<option value="Expense">Expense</option>
+
+</select>
+<button type="submit">
+🔍 Search
+</button>
+
+</form>
+<!-- ACTION BUTTONS -->
+<button id="menuBtn" class="menu-btn">
+    ☰
+</button>
+
+<div id="overlay" class="overlay"></div>
+
+<div id="sidebar" class="sidebar">
+
+    <h2>📂 Menu</h2>
+<a href="{{ url_for('profile') }}">👤 Profile</a>
+<a href="{{ url_for('add_transaction') }}">➕ Add Transaction</a>
+
+<a href="{{ url_for('import_excel') }}">📥 Import Excel</a>
+
+<a href="{{ url_for('investments') }}">📈 Investments</a>
+
+<a href="{{ url_for('insights') }}">🤖 AI Insights</a>
+
+<a href="{{ url_for('loans') }}">💳 Loans</a>
+
+<a href="{{ url_for('transfer') }}">🔄 Transfer</a>
+
+<a href="{{ url_for('budget') }}">💰 Budget</a>
+
+<a href="{{ url_for('analytics') }}">📊 Analytics</a>
+
+<a href="{{ url_for('calendar_view') }}">📅 Calendar</a>
+
+<a href="{{ url_for('savings_goals') }}">🎯 Savings Goals</a>
+
+<a href="{{ url_for('report') }}">📄 Reports</a>
+
+<a href="{{ url_for('investments') }}">📈 Portfolio</a>
+
+<a href="{{ url_for('export_excel') }}">📄 Export Excel</a>
+
+<a href="{{ url_for('export_pdf') }}">📕 Export PDF</a>
+<a href="{{ url_for('clear_transactions') }}"
+   class="delete-btn"
+   onclick="return confirm('Are you sure? This will delete ALL transactions.')">
+   Clear All Transactions
+</a>
+<a href="{{ url_for('logout') }}">🚪 Logout</a>
+{% if session.get("is_admin") %}
+<a href="{{ url_for('admin') }}">👨‍💼 Admin Panel</a>
+{% endif %}
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- RECENT TRANSACTIONS -->
+
+<h2 class="section-title">
+Recent Transactions
+</h2>
+<div class="transactions-container">
+{% if transactions %}
+
+{% for t in transactions %}
+
+<div class="transaction-card">
+
+<div class="transaction-header">
+
+<div>
+
+<h3>{{ t.category }}</h3>
+
+<p>{{ t.date }}</p>
+
+{% if t.recurring %}
+<span class="badge">
+🔁 {{ t.frequency }}
+</span>
+{% endif %}
+
+</div>
+
+<div class="{% if t.type=='Income' %}income-amount{% else %}expense-amount{% endif %}">
+
+{% if t.type=="Income" %}
++₹{{ t.amount }}
+{% else %}
+-₹{{ t.amount }}
+{% endif %}
+
+</div>
+
+</div>
+
+<div class="transaction-buttons">
+
+<a href="/edit-transaction/{{ t.id }}" class="edit-btn">
+✏ Edit
+</a>
+
+<a href="/delete-transaction/{{ t.id }}"
+class="delete-btn"
+onclick="return confirm('Delete this transaction?')">
+🗑 Delete
+</a>
+
+{% if t.receipt %}
+
+<a href="{{ url_for('static', filename='uploads/' + t.receipt) }}"
+target="_blank"
+class="receipt-btn">
+📎 Receipt
+</a>
+
+{% endif %}
+
+</div>
+
+</div>
+
+{% endfor %}
+
+{% else %}
+
+<p class="empty">
+No transactions available.
+</p>
+
+{% endif %}
+
+</div>
+<!-- CHARTS -->
+
+<div class="charts-section">
+
+    <div class="chart-card">
+        <h3>📊 Income vs Expense</h3>
+        <canvas id="financeChart"></canvas>
+    </div>
+
+    <div class="chart-card">
+        <h3>🥧 Expense by Category</h3>
+        <canvas id="categoryChart"></canvas>
+    </div>
+
+</div>
+
+</div> <!-- container -->
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+const financeCtx = document.getElementById("financeChart");
+
+new Chart(financeCtx,{
+    type:"doughnut",
+    data:{
+        labels:["Income","Expense"],
+        datasets:[{
+            data:[{{ income }},{{ expense }}],
+            backgroundColor:[
+                "#10B981",
+                "#EF4444"
+            ],
+            borderWidth:0
+        }]
+    },
+    options:{
+        responsive:true,
+        plugins:{
+            legend:{
+                position:"bottom"
+            }
+        }
+    }
+});
+
+const categoryCtx = document.getElementById("categoryChart");
+
+new Chart(categoryCtx,{
+    type:"pie",
+    data:{
+        labels:["Food","Fuel","Shopping","Travel","Other"],
+        datasets:[{
+            data:[
+                {{ food }},
+                {{ fuel }},
+                {{ shopping }},
+                {{ travel }},
+                {{ other }}
+            ],
+            backgroundColor:[
+                "#3B82F6",
+                "#10B981",
+                "#F59E0B",
+                "#EF4444",
+                "#8B5CF6"
+            ]
+        }]
+    },
+    options:{
+        responsive:true,
+        plugins:{
+            legend:{
+                position:"bottom"
+            }
+        }
+    }
+});
+
+
+</script>
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+</body>
+</html>

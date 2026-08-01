@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Edit Investment</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/add_transaction.css') }}">
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="card">
+
+<h1>📈 Edit Investment</h1>
+
+<form method="POST">
+
+<label>Investment Name</label>
+<input type="text" name="name" value="{{ investment.name }}" required>
+
+<select name="type" required>
+    <option value="Stocks" {% if investment.type=="Stocks" %}selected{% endif %}>Stocks</option>
+    <option value="Mutual Fund" {% if investment.type=="Mutual Fund" %}selected{% endif %}>Mutual Fund</option>
+    <option value="Gold" {% if investment.type=="Gold" %}selected{% endif %}>Gold</option>
+    <option value="Fixed Deposit" {% if investment.type=="Fixed Deposit" %}selected{% endif %}>Fixed Deposit</option>
+    <option value="PPF" {% if investment.type=="PPF" %}selected{% endif %}>PPF</option>
+    <option value="Crypto" {% if investment.type=="Crypto" %}selected{% endif %}>Crypto</option>
+    <option value="Real Estate" {% if investment.type=="Real Estate" %}selected{% endif %}>Real Estate</option>
+    <option value="Other" {% if investment.type=="Other" %}selected{% endif %}>Other</option>
+</select>
+<input type="number" step="0.01" name="invested_amount"
+value="{{ investment.invested_amount }}" required>
+<input type="number" step="0.01" name="current_value"
+value="{{ investment.current_value }}" required>
+<input type="date" name="purchase_date"
+value="{{ investment.purchase_date }}" required>
+<button type="submit">
+💾 Save Investment
+</button>
+
+</form>
+
+</div>
+
+</div>
+
+</body>
+</html>
