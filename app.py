@@ -50,27 +50,24 @@ app.config["MAIL_USERNAME"] = os.environ.get("MAIL_USERNAME")
 app.config["MAIL_PASSWORD"] = os.environ.get("MAIL_PASSWORD")
 mail = Mail(app)
 def send_otp(email, otp):
+
+    import smtplib
+
     try:
-        print("Connecting to Brevo...")
+        print("Testing SMTP...")
 
-        print("MAIL_USERNAME:", app.config["MAIL_USERNAME"])
-        print("MAIL_PASSWORD exists:", app.config["MAIL_PASSWORD"] is not None)
+        server = smtplib.SMTP("smtp-relay.brevo.com", 587, timeout=10)
+        server.starttls()
+        server.login(app.config["MAIL_USERNAME"], app.config["MAIL_PASSWORD"])
 
-        msg = Message(
-            subject="Personal Finance Manager - Email Verification",
-            sender=app.config["MAIL_USERNAME"],
-            recipients=[email]
-        )
+        print("✅ SMTP LOGIN SUCCESS")
 
-        msg.body = f"Your OTP is: {otp}"
+        server.quit()
 
-        mail.send(msg)
-
-        print("✅ Email sent successfully")
         return True
 
     except Exception as e:
-        print("❌ MAIL ERROR:", e)
+        print("❌ SMTP ERROR:", e)
         return False
 db.init_app(app)
 
