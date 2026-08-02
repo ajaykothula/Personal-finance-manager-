@@ -40,37 +40,35 @@ app.config["SQLALCHEMY_DATABASE_URI"] = (
 )
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["UPLOAD_FOLDER"] = "static/uploads"
-app.config["MAIL_SERVER"] = "smtp.gmail.com"
+app.config["MAIL_SERVER"] = "smtp-relay.brevo.com"
 app.config["MAIL_PORT"] = 587
 app.config["MAIL_USE_TLS"] = True
-app.config["MAIL_USERNAME"] = "ajaykothula@gmail.com"
-app.config["MAIL_PASSWORD"] = "jwru fhpe vkwt fiax"
+app.config["MAIL_USE_SSL"] = False
+app.config["MAIL_TIMEOUT"] = 10
 
+app.config["MAIL_USERNAME"] = os.environ.get("MAIL_USERNAME")
+app.config["MAIL_PASSWORD"] = os.environ.get("MAIL_PASSWORD")
 mail = Mail(app)
 def send_otp(email, otp):
     try:
+        print("Connecting to Brevo...")
+
         msg = Message(
             subject="Personal Finance Manager - Email Verification",
             sender=app.config["MAIL_USERNAME"],
             recipients=[email]
         )
 
-        msg.body = f"""
-Hello,
-
-Your verification code is:
-
-{otp}
-
-This OTP is valid for 10 minutes.
-"""
+        msg.body = f"Your OTP is: {otp}"
 
         mail.send(msg)
+
         print("✅ Email sent successfully")
+        return True
 
     except Exception as e:
-        print("❌ Email Error:", e)
-
+        print("❌ MAIL ERROR:", e)
+        return False
 db.init_app(app)
 
 with app.app_context():
@@ -101,7 +99,9 @@ def register():
 
         print("OTP:", otp)
 
-        send_otp(email, otp)
+        if not send_otp(email, otp):
+            flash("Unable to send OTP email. Please try again later.")
+            return redirect(url_for("register"))
 
         return redirect(url_for("verify_register_otp"))
 
