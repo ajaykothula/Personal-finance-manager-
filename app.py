@@ -53,6 +53,9 @@ def send_otp(email, otp):
     try:
         print("Connecting to Brevo...")
 
+        print("MAIL_USERNAME:", app.config["MAIL_USERNAME"])
+        print("MAIL_PASSWORD exists:", app.config["MAIL_PASSWORD"] is not None)
+
         msg = Message(
             subject="Personal Finance Manager - Email Verification",
             sender=app.config["MAIL_USERNAME"],
