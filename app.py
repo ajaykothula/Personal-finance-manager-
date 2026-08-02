@@ -55,9 +55,10 @@ def send_otp(email, otp):
 
     try:
         print("Testing SMTP...")
-
+        print("Connecting to smtp-relay.brevo.com:587")
         server = smtplib.SMTP("smtp-relay.brevo.com", 587, timeout=10)
         server.starttls()
+        print("TLS started")
         server.login(app.config["MAIL_USERNAME"], app.config["MAIL_PASSWORD"])
 
         print("✅ SMTP LOGIN SUCCESS")
