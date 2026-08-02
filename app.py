@@ -26,6 +26,7 @@ import random
 from models.loan import Loan
 from models.savings_goal import SavingsGoal
 from sqlalchemy import func
+import requests
 
 app = Flask(__name__)
 app.secret_key = "change_this_to_a_long_random_secret_key"
@@ -50,26 +51,37 @@ app.config["MAIL_USERNAME"] = os.environ.get("MAIL_USERNAME")
 app.config["MAIL_PASSWORD"] = os.environ.get("MAIL_PASSWORD")
 mail = Mail(app)
 def send_otp(email, otp):
+    url = "https://api.brevo.com/v3/smtp/email"
 
-    import smtplib
+    headers = {
+        "accept": "application/json",
+        "api-key": os.environ.get("BREVO_API_KEY"),
+        "content-type": "application/json"
+    }
 
-    try:
-        print("Testing SMTP...")
-        print("Connecting to smtp-relay.brevo.com:587")
-        server = smtplib.SMTP("smtp-relay.brevo.com", 587, timeout=10)
-        server.starttls()
-        print("TLS started")
-        server.login(app.config["MAIL_USERNAME"], app.config["MAIL_PASSWORD"])
+    payload = {
+        "sender": {
+            "name": "Personal Finance Manager",
+            "email": "ajaykothula@gmail.com"
+        },
+        "to": [
+            {"email": email}
+        ],
+        "subject": "Email Verification OTP",
+        "htmlContent": f"""
+        <h2>Email Verification</h2>
+        <p>Your OTP is:</p>
+        <h1>{otp}</h1>
+        <p>This OTP expires in 5 minutes.</p>
+        """
+    }
 
-        print("✅ SMTP LOGIN SUCCESS")
+    response = requests.post(url, headers=headers, json=payload)
 
-        server.quit()
+    print(response.status_code)
+    print(response.text)
 
-        return True
-
-    except Exception as e:
-        print("❌ SMTP ERROR:", e)
-        return False
+    return response.status_code == 201
 db.init_app(app)
 
 with app.app_context():
